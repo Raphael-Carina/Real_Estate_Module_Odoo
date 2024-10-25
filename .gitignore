@@ -1,2 +1,3 @@
 env/
 data_dir/
+models/__pycache__/
