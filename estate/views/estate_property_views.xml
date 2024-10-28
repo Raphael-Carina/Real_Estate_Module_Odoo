@@ -3,13 +3,13 @@
 <odoo>
 
     <record id="estate_property_action" model="ir.actions.act_window">
-        <field name="name">Estate Property Action</field>
+        <field name="name">Vue des annonces</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <!-- Les vues liste affichent les enregistrements sous forme 'tabulaire' (sous forme de ligne) 
-    Leur root element est <list> -->
+    Leur root element est <tree> -->
     <record id="estate_property_list_view" model="ir.ui.view">
         <field name="name">estate.property.list.view</field>
         <field name="model">estate.property</field>
@@ -25,6 +25,43 @@
             </tree>
         </field>
     </record>
+
+
+    <!-- Les vues form sont utilisées pour créer et éditer un enregistrement. Leur root element est <form> -->
+    <record id="estate_property_form_view" model="ir.ui.view">
+        <field name="name">estate.property.form.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="postcode"/>
+                        <field name="date_available_from"/>
+                        <field name="expected_price"/>
+                        <field name="selling_price"/>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                            <group>
+                                <field name="bedrooms"/>
+                                <field name="living_area"/>
+                                <field name="facades"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                <field name="garden_area"/>
+                                <field name="garden_orientation"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 
+    - les <field> hors d'un <group> : seuls leurs contenus apparait, mais pas leur nom.
+     -->
 
 
 </odoo>
