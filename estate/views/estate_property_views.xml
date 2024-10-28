@@ -34,6 +34,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <h1><field name="name"/></h1>
                     <group>
                         <field name="postcode"/>
                         <field name="date_available_from"/>
@@ -51,6 +52,7 @@
                                 <field name="garden"/>
                                 <field name="garden_area"/>
                                 <field name="garden_orientation"/>
+                                <field name="active"/>
                             </group>
                         </page>
                     </notebook>
@@ -61,6 +63,35 @@
 
     <!-- 
     - les <field> hors d'un <group> : seuls leurs contenus apparait, mais pas leur nom.
+     -->
+
+
+     <!-- Les vues search sont un peu différentes des vues list et form.
+        Elles n'affichent pas de contenu. Elles sont utilisées pour filtrer les contenus d'autres vues.
+        Leur root element est <search> -->
+    <record id="estate_property_search_view" model="ir.ui.view">
+        <field name="name">estate.property.search.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Recherche">
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="expected_price"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="facades"/>
+                <filter string="Inactives" name="inactives" domain="[('active', '=', False)]"/>
+                <filter string="Postcode" name="postcode" context="{'group_by':'postcode'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- 
+    Dans les filtres :
+    - on utilise un domain pour filtrer sur des champs existant du modèle (la condition est statique ou basée sur des champs)
+    - on utilise un context pour grouper des données et des comportements dynamiques (ou passer des paramètres à des méthodes ou définir des valeurs par défaut)
+
+    Les 2 peuvent être combinés.
      -->
 
 
