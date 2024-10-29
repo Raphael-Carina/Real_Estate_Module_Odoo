@@ -113,4 +113,18 @@ class EstateProperty(models.Model):
     best_price. -> il est possible d'utiliser les chemins vers un champ dans un modèle lié via un champ relationnel comme dépendance.
                     Dans notre cas, on dit que la valeur du champ best_price dépend du champ price dans le modèle estate.property.offers via le champ offers_ids (One2many).
                     Cela fonctionne avec tous les types de champs relationnels : Many2one, Many2many, One2many.
+
+                    
+    Les méthode _inverse : (dans estate.property.offers)
+    ______________________
+
+    Précédemment, avec les champs calculés, on remarque qu'ils sont par défaut en readonly.
+    En effet, l'utilisateur n'a pas à saisir sa valeur puisqu'il est calculé en fonction d'autre(s) champ(s).
+    Dans certains cas, on aimerait quand même pouvoir les modifier.
+    C'est le cas avec nos champs validity et date_deadline. En effet chacun de ces 2 champs à un impact sur l'autre et il faut bien pouvoir en saisir un pour définir l'autre.
+    Cela est permit dans Odoo avec les méthodes _inverse.
+
+    -> Une méthode _compute donne la valeur du champ tandis qu'une méthode _inverse donne la valeur du/des champ(s) mis en dépendances.
+
+    Il est à noter qu'une méthode _inverse est appelée lors de l'enregistrement de l'enregistrement tandis qu'une méthode _compute est appelée à chaque modification d'une de ses dépendances.
     """
