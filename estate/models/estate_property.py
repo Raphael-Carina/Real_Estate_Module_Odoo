@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('C:\\Users\\Raphaël\\dev\\odoo17\\odoo')
 
-from odoo import models, fields
+from odoo import api, models, fields
 
 
 
@@ -13,6 +13,9 @@ class EstateProperty(models.Model):
     # ==============
     # Model's fields
     # ==============
+
+    # Champs basiques
+    #________________
 
     name = fields.Char(string='Title', required=True)
     description = fields.Text()
@@ -31,6 +34,9 @@ class EstateProperty(models.Model):
     active = fields.Boolean(default=True)
     possible_state = [('new','New'),('offer_received','Offer Received'),('offer_acceptred','Offer Accepted'),('sold','Sold'),('cancelled','Cancelled')]
     state = fields.Selection(selection=possible_state, required=True, copy=False, default='new')
+
+    # Champs relationnels
+    #____________________
 
     property_type_id = fields.Many2one(comodel_name='estate.property.type', string="Type")
     salesperson = fields.Many2one(comodel_name="res.users", default=lambda self: self.env.user)
@@ -72,3 +78,22 @@ class EstateProperty(models.Model):
     Attention : les relations One2many sont dites 'virtuelles'. Pour exister, il est nécessaire qu'il y ait un champ Many2one dans le modèle lié.
     """
 
+    # Champs calculés
+    #________________
+
+    total_area = fields.Float(compute="_compute_total_area")
+
+    @api.depends("living_area","garden_area")
+    def _compute_total_area(self):
+        for record in self:
+            record.total_area = record.living_area + record.garden_area
+
+    """
+    Jusqu'à présent, avec les champs basiques, leurs valeurs étaient directement stockées puis extraites de la base de données.
+    Avec les champs calculés comme notre champ total_area, c'est différent. Sa valeur n'est pas directement stockée dans la bdd. Sa valeur est calculée à la volée
+    via la méthode _compute_total_area.
+
+    Une méthode _compute doit calculer le champ calculé pour tous les enregistrement du modèle ! C'est pour ça qu'on doit nécessairement boucler sur le self.
+
+    Par convention, les méthodes _compute sont toujours privées (d'où le underscore).
+    """
