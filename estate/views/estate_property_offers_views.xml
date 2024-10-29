@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<odoo>
+
+    <!-- Vue tree pour le modèle estate.property.offers -->
+    <record id="estate_property_offers_tree_view" model="ir.ui.view">
+        <field name="name">estate.property.offers.tree.view</field>
+        <field name="model">estate.property.offers</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="price"/>
+                <field name="partner_id"/>
+                <field name="status"/>
+                <!-- <field name="property_id"/> -->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue form pour le modèle estate.property.offers -->
+    <record id="estate_property_offers_form_view" model="ir.ui.view">
+        <field name="name">estate.property.offers.form.view</field>
+        <field name="model">estate.property.offers</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="partner_id"/>
+                        <field name="status"/>
+                        <!-- <field name="property_id"/> -->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

@@ -64,6 +64,9 @@
                                 <field name="active"/>
                             </group>
                         </page>
+                        <page string="Offers">
+                            <field name="offers_ids"/>
+                        </page>
                         <page string="Others Informations">
                             <group>
                                 <field name="salesperson"/>
