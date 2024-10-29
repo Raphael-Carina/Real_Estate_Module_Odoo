@@ -92,7 +92,7 @@ class EstateProperty(models.Model):
     @api.depends("offers_ids.price")
     def _compute_best_price(self):
         for record in self:
-            record.best_price = max(record.offers_ids.mapped('price'))
+            record.best_price = max(record.offers_ids.mapped('price'), default=0.0) # Nécessaire de mettre 0 par défaut dans le cas où il n'y a pas d'offres pour l'annonce
 
     @api.onchange("garden")
     def _onchange_garden(self):
@@ -121,6 +121,7 @@ class EstateProperty(models.Model):
     best_price. -> il est possible d'utiliser les chemins vers un champ dans un modèle lié via un champ relationnel comme dépendance.
                     Dans notre cas, on dit que la valeur du champ best_price dépend du champ price dans le modèle estate.property.offers via le champ offers_ids (One2many).
                     Cela fonctionne avec tous les types de champs relationnels : Many2one, Many2many, One2many.
+                    Il est nécessaire de placer une valeur par défaut (ici sur 0), sinon max() retourne une 'empty sequence' et on ne peut plus ni ouvrir des annonces sans offre ni créer de nouvelles annonces (car le champ best_price ne trouve pas de valeur).
 
                     
     Les méthode _inverse : (dans estate.property.offers)
