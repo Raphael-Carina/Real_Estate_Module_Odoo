@@ -82,13 +82,26 @@ class EstateProperty(models.Model):
     #________________
 
     total_area = fields.Float(compute="_compute_total_area")
+    best_price = fields.Float(compute="_compute_best_price")
 
     @api.depends("living_area","garden_area")
     def _compute_total_area(self):
         for record in self:
             record.total_area = record.living_area + record.garden_area
 
+    @api.depends("offers_ids.price")
+    def _compute_best_price(self):
+        for record in self:
+            record.best_price = max(record.offers_ids.mapped('price'))
+
+
+
     """
+
+    Explications sur les champs calculés :
+    ______________________________________
+
+    
     Jusqu'à présent, avec les champs basiques, leurs valeurs étaient directement stockées puis extraites de la base de données.
     Avec les champs calculés comme notre champ total_area, c'est différent. Sa valeur n'est pas directement stockée dans la bdd. Sa valeur est calculée à la volée
     via la méthode _compute_total_area.
@@ -96,4 +109,8 @@ class EstateProperty(models.Model):
     Une méthode _compute doit calculer le champ calculé pour tous les enregistrement du modèle ! C'est pour ça qu'on doit nécessairement boucler sur le self.
 
     Par convention, les méthodes _compute sont toujours privées (d'où le underscore).
+
+    best_price. -> il est possible d'utiliser les chemins vers un champ dans un modèle lié via un champ relationnel comme dépendance.
+                    Dans notre cas, on dit que la valeur du champ best_price dépend du champ price dans le modèle estate.property.offers via le champ offers_ids (One2many).
+                    Cela fonctionne avec tous les types de champs relationnels : Many2one, Many2many, One2many.
     """
