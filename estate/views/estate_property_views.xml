@@ -58,6 +58,12 @@
                                 <field name="active"/>
                             </group>
                         </page>
+                        <page string="Others Informations">
+                            <group>
+                                <field name="salesperson"/>
+                                <field name="buyer"/>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
             </form>

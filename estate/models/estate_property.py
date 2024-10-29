@@ -33,6 +33,8 @@ class EstateProperty(models.Model):
     state = fields.Selection(selection=possible_state, required=True, copy=False, default='new')
 
     property_type_id = fields.Many2one(comodel_name='estate.property.type', string="Type")
+    salesperson = fields.Many2one(comodel_name="res.users", default=lambda self: self.env.user)
+    buyer = fields.Many2one(comodel_name="res.partner", copy=False)
 
     """
     Explications sur les différents fields et leurs attributs possibles :
