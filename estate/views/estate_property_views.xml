@@ -39,11 +39,15 @@
                     <h1><field name="name"/></h1>
                     <field name="tags_ids" widget="many2many_tags"/>
                     <group>
-                        <field name="property_type_id"/>
-                        <field name="postcode"/>
-                        <field name="date_available_from"/>
-                        <field name="expected_price"/>
-                        <field name="selling_price"/>
+                        <group>
+                            <field name="property_type_id"/>
+                            <field name="postcode"/>
+                            <field name="date_available_from"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Description">
