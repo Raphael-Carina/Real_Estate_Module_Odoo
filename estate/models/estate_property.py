@@ -36,6 +36,8 @@ class EstateProperty(models.Model):
     salesperson = fields.Many2one(comodel_name="res.users", default=lambda self: self.env.user)
     buyer = fields.Many2one(comodel_name="res.partner", copy=False)
 
+    tags_ids = fields.Many2many(comodel_name='estate.property.tags')
+
     """
     Explications sur les différents fields et leurs attributs possibles :
     _____________________________________________________________________
@@ -47,5 +49,13 @@ class EstateProperty(models.Model):
 
     - les champs Many2one sont des liens vers d'autres objets. Ici on a le champ 'property_type_id' qui, à chaque création d'un enregistrement du modèle estate.property (=une annonce),
     pointe vers un enregistrement du modèle estate.property.type (=un type). Une annonce peut avoir qu'un seul type et un même type peut être utilisé dans plusieurs annonces.
+    Ces champs se comportent comme une liste d'enregistrement de taille 0 ou 1 (recordset of 0 or 1 record).
+
+    - les champs Many2many sont des relations multiples et bidirectionnelles. Ici, on a le champ 'tags_ids'. Une propriété peut avoir plusieurs tags et chaque tags
+    peut être utilisés dans plusieurs annonces. Chaque enregistrement d'un des 2 modèles (estate.property et estate.property.tags) peut être reliés à plusieurs enregistrement de l'autre modèle.
+    Par exemple, un annonce peut être liée à plusieurs tags différents ET, de la même façon, un tag peut être relié à plusieurs annonces différentes.
+    Ces champs se comportent comme un liste d'enregistrement (recordset).
+
+
     """
 
