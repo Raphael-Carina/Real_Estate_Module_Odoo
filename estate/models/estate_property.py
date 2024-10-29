@@ -32,6 +32,8 @@ class EstateProperty(models.Model):
     possible_state = [('new','New'),('offer_received','Offer Received'),('offer_acceptred','Offer Accepted'),('sold','Sold'),('cancelled','Cancelled')]
     state = fields.Selection(selection=possible_state, required=True, copy=False, default='new')
 
+    property_type_id = fields.Many2one(comodel_name='estate.property.type', string="Type")
+
     """
     Explications sur les différents fields et leurs attributs possibles :
     _____________________________________________________________________
@@ -40,5 +42,8 @@ class EstateProperty(models.Model):
     - l'attribut copy=False permet de faire en sorte que le champ en question ne soit pas copier/coller lorsque l'on duplique un enregistrement du modèle.
     - certains nom de champs sont réservés par Odoo. C'est le cas du nom 'active'. Lorsque ce champ est sur False, l'enregistrement en question disparait de la liste
     des enregistrements. Il faut modifier les filtres de recherche pour le retrouver.
+
+    - les champs Many2one sont des liens vers d'autres objets. Ici on a le champ 'property_type_id' qui, à chaque création d'un enregistrement du modèle estate.property (=une annonce),
+    pointe vers un enregistrement du modèle estate.property.type (=un type). Une annonce peut avoir qu'un seul type et un même type peut être utilisé dans plusieurs annonces.
     """
 

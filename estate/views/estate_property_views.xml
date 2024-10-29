@@ -16,6 +16,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="property_type_id"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
@@ -36,6 +37,7 @@
                 <sheet>
                     <h1><field name="name"/></h1>
                     <group>
+                        <field name="property_type_id"/>
                         <field name="postcode"/>
                         <field name="date_available_from"/>
                         <field name="expected_price"/>
@@ -81,6 +83,7 @@
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="facades"/>
+                <field name="property_type_id"/>
                 <filter string="Inactives" name="inactives" domain="[('active', '=', False)]"/>
                 <filter string="Availables" name="available" domain="['|',('state','=','new'),('state','=','offer_received')]"/>
                 <filter string="Postcode" name="postcode" context="{'group_by':'postcode'}"/>
