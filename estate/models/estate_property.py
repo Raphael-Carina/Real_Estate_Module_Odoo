@@ -94,6 +94,14 @@ class EstateProperty(models.Model):
         for record in self:
             record.best_price = max(record.offers_ids.mapped('price'))
 
+    @api.onchange("garden")
+    def _onchange_garden(self):
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = 'north'
+        else:
+            self.garden_area = False
+            self.garden_orientation = False
 
 
     """
@@ -104,7 +112,7 @@ class EstateProperty(models.Model):
     
     Jusqu'à présent, avec les champs basiques, leurs valeurs étaient directement stockées puis extraites de la base de données.
     Avec les champs calculés comme notre champ total_area, c'est différent. Sa valeur n'est pas directement stockée dans la bdd. Sa valeur est calculée à la volée
-    via la méthode _compute_total_area.
+    via la méthode _compute_total_area (On peut stocker les valeurs des champs calculer avec store=True mais ça peut être dangereux car ces champs seraient recalculés pour tous les enregistrements chaque fois qu'un dépendance changerait).
 
     Une méthode _compute doit calculer le champ calculé pour tous les enregistrement du modèle ! C'est pour ça qu'on doit nécessairement boucler sur le self.
 
@@ -127,4 +135,15 @@ class EstateProperty(models.Model):
     -> Une méthode _compute donne la valeur du champ tandis qu'une méthode _inverse donne la valeur du/des champ(s) mis en dépendances.
 
     Il est à noter qu'une méthode _inverse est appelée lors de l'enregistrement de l'enregistrement tandis qu'une méthode _compute est appelée à chaque modification d'une de ses dépendances.
+
+
+    Les onchange :
+    ______________
+
+    Les onchange ne s'appliquent que dans les form. self représente alors l'enregistrement dans le form.
+    Lorsqu'un champ indiqué dans le décorateur onchange() est modifié, la méthode _onchange est trigger.
+
+    -> les _compute et les _onchange permettent souvent d'arriver au même résultat.
+    Il est préférable d'utiliser les _compute car ils sont activés dans des contextes hors des vues form.
+
     """
