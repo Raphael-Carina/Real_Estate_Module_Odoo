@@ -66,7 +66,7 @@ class EstateProperty(models.Model):
     garden_area = fields.Integer()
     garden_orientation = fields.Selection(selection=[('south','South'),('west','West'),('north','North'),('east','East')])
     active = fields.Boolean(default=True)
-    possible_state = [('new','New'),('offer_received','Offer Received'),('offer_acceptred','Offer Accepted'),('sold','Sold'),('cancelled','Cancelled')]
+    possible_state = [('new','New'),('offer_received','Offer Received'),('offer_accepted','Offer Accepted'),('sold','Sold'),('cancelled','Cancelled')]
     state = fields.Selection(selection=possible_state, required=True, copy=False, default='new')
 
     # Champs relationnels
