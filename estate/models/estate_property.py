@@ -10,6 +10,15 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = """This model is used to create real estate properties ads"""
 
+    # ===============
+    # Contraintes SQL
+    # ===============
+
+    _sql_constraints = [
+        ('check_positive_expected_price','CHECK(expected_price > 0)','The expected price should be strictly positive !'),
+        ('check_positive_selling_price', 'CHECK(selling_price > 0)','The selling price should be strictly positive !')
+    ]
+
     # ==============
     # Model's fields
     # ==============

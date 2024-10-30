@@ -4,6 +4,14 @@ class EstatePropetyTags(models.Model):
     _name = "estate.property.tags"
     _description = """Model used to create tags of properties. These tags should be used in the creation of estate.property record"""
 
+    # ===============
+    # Contraintes SQL
+    # ===============
+
+    _sql_constraints = [
+        ('check_unique_tags','UNIQUE(name)','A property tag should be unique !')
+    ]
+
     # ================
     # Champs du modèle
     # ================

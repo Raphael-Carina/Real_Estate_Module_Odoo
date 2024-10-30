@@ -5,6 +5,14 @@ class EstatePropertyOffers(models.Model):
     _name = "estate.property.offers"
     _description = """Model used to create offers for a given record of estate.property model."""
 
+    # ===============
+    # Contraintes SQL
+    # ===============
+
+    _sql_constraints = [
+        ('check_positive_price','CHECK(price > 0)','The price of an offer shoud be strictly positive !')
+    ]
+
     # ================
     # Champs du modèle
     # ================
