@@ -14,7 +14,8 @@
         <field name="name">estate.property.list.view</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-success="state in ('offer_received','offer_accepted')" decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'">
+                <field name="state" invisible="1"/> <!-- Je dois charger le champ state même si je ne veux pas l'afficher car je fais des conditions dessus avec decoration- juste au dessus -->
                 <field name="name"/>
                 <field name="property_type_id"/>
                 <field name="tags_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
