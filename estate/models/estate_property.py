@@ -3,7 +3,7 @@ import sys
 sys.path.append('C:\\Users\\Raphaël\\dev\\odoo17\\odoo')
 
 from odoo import api, models, fields
-
+from odoo.exceptions import UserError
 
 
 class EstateProperty(models.Model):
@@ -147,4 +147,49 @@ class EstateProperty(models.Model):
     -> les _compute et les _onchange permettent souvent d'arriver au même résultat.
     Il est préférable d'utiliser les _compute car ils sont activés dans des contextes hors des vues form.
 
+    """
+
+    # ===========
+    # Les actions
+    # ===========
+
+    def action_sold(self):
+        """
+        Quand cette action est trigger via le bouton, on veut passer le state de l'annonce sur sold.
+        On ne veut pas pouvoir trigger cette action si le state de l'annonce est déjà cancelled.
+        """
+
+        for record in self:
+            if not record.state == "cancelled":
+                record.state = 'sold'
+            else:
+                raise UserError("Cancelled property can't be sold !")
+
+            return True
+    
+    def action_cancelled(self):
+        """
+        Quand cette action est trigger via le bouton, on veut passer le state de l'annonce sur canceled.
+        On ne veut pas pouvoir trigger cette action si le state de l'annonce est déjà sur sold.
+        """
+
+        for record in self:
+            if not record.state == 'sold':
+                record.state = 'cancelled'
+            else:
+                raise UserError("Sold property can't be cancelled !")
+
+            return True
+        
+    """
+
+    Les actions :
+    _____________
+
+    Les actions ne sont pas des méthodes privées, on ne mets donc pas le underscore devant leurs noms.
+    Cela les rends 'callable' depuis un call RPC.
+
+    On boucle également sur le self car la méthode doit pouvoir être appelée sur plusieurs enregistrements (même tous).
+
+    Une méthode publique doit toujours retourner quelque chose, c'est pour ça qu'on fait au moins un return True.
     """
