@@ -8,6 +8,7 @@
         <field name="model">estate.property.offers</field>
         <field name="arch" type="xml">
             <tree editable="bottom" decoration-success="status=='accepted'" decoration-danger="status=='refused'">
+                <field name="property_type_id"/>
                 <field name="price"/>
                 <field name="partner_id"/>
                 <field name="validity"/>
