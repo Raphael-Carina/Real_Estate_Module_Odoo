@@ -2,8 +2,8 @@ import sys
 
 sys.path.append('C:\\Users\\Raphaël\\dev\\odoo17\\odoo')
 
-from odoo import api, models, fields
-from odoo.exceptions import UserError
+from odoo import api, models, fields, tools
+from odoo.exceptions import UserError, ValidationError
 
 
 class EstateProperty(models.Model):
@@ -18,6 +18,31 @@ class EstateProperty(models.Model):
         ('check_positive_expected_price','CHECK(expected_price > 0)','The expected price should be strictly positive !'),
         ('check_positive_selling_price', 'CHECK(selling_price > 0)','The selling price should be strictly positive !')
     ]
+
+
+
+    # ==================
+    # Contraintes Python
+    # ==================
+
+    """
+    On ne voudrait pas pouvoir accepter d'offre dont le prix est inférieur à 90% du prix de vente souhaité.
+    C'est à dire qu'on ne veut pas que le selling_price soit inférieur à 90% du expected_price.
+    Pour ça, on veut passer par une contrainte Python.
+
+    On est obligé de vérifier 'if record.selling_price' car sinon, la contrainte empêcherait de créer de nouvelle annonce.
+    En effet, lorsqu'on créer une nouvelle annonce, le selling_price sera sur 0 et sera donc < 90% du expected_price.
+
+    Une contrainte python trigger à chaque fois qu'un des champs passé dans le décorateur constrains() est modifié.
+    """
+
+    @api.constrains('selling_price','expected_price')
+    def _check_selling_price_vs_expected_price(self):
+        for record in self:
+            if record.selling_price and tools.float_compare(record.selling_price, 0.9 * record.expected_price, 1) == -1:
+                raise ValidationError("Can't accept offer with a lower price than 90% of the expected price !")
+
+
 
     # ==============
     # Model's fields
