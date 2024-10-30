@@ -3,7 +3,7 @@ from odoo import models, fields
 class EstatePropertyType(models.Model):
     _name = 'estate.property.type'
     _description = """Model used to create new type of properties, used un the estate.property model to create instance"""
-    _order = "name"
+    _order = "sequence, name"
 
     # ===============
     # Contraintes SQL
@@ -22,6 +22,7 @@ class EstatePropertyType(models.Model):
     #________________
 
     name = fields.Char(required=True)
+    sequence = fields.Integer(string="Sequence", default=1, help="Used to order type.") # Champ utilisé pour gérer l'order manuel dans la tree view du modèle
 
     # Champs relationels
     #___________________

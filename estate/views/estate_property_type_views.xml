@@ -8,6 +8,8 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+
+    <!-- Form view pour le modèle des Type -->
     <record id="estate_property_type_form_view" model="ir.ui.view">
         <field name="name">estate.property.type.form.view</field>
         <field name="model">estate.property.type</field>
@@ -37,6 +39,22 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <!-- Tree view pour le modèle des Types -->
+    <!-- 
+    On utilise le champ 'sequence' du modèle, couplé à un widget="handle" pour pouvoir gérer l'ordre des types dans la tree view de façon manuelle.
+     -->
+     
+    <record id="estate_property_type_tree_view" model="ir.ui.view">
+        <field name="name">estate.property.type.tree.view</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
         </field>
     </record>
 
