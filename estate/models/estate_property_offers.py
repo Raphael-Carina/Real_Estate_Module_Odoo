@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 class EstatePropertyOffers(models.Model):
     _name = "estate.property.offers"
     _description = """Model used to create offers for a given record of estate.property model."""
+    _order = "price desc" # Les plus chères en haut
 
     # ===============
     # Contraintes SQL
