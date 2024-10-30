@@ -105,7 +105,7 @@
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area"/>
+                <field name="living_area" filter_domain="[('living_area','>=',self)]"/> <!-- le self dans un filter_domain correspond à la valeur saisie par l'utilisateur -->
                 <field name="facades"/>
                 <field name="property_type_id"/>
                 <filter string="Inactives" name="inactives" domain="[('active', '=', False)]"/>
