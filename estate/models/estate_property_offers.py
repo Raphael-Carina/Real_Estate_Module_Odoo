@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from odoo.exceptions import UserError
 
 class EstatePropertyOffers(models.Model):
     _name = "estate.property.offers"
@@ -60,9 +61,43 @@ class EstatePropertyOffers(models.Model):
     # ===========
 
     def action_accept_offer(self):
+        """
+        Action pour accepter une offre.
+        On ne doit pas pouvoir accepter une offre déjà refuser.
+        Lorsqu'une offre est acceptée, on doit définir les champs buyer et selling_price du modèle estate.property avec les valeurs de l'offre.
+        Lorsqu'une offre est acceptée, on doit automatiquement refuser toutes les autres offres.
+        """
+
         for record in self:
-            record.status = 'accepted'
+            if not record.status == 'refused':
+                record.status = 'accepted'
+                record.property_id.buyer = record.partner_id
+                record.property_id.selling_price = record.price
+
+                # Refuser les autres offres
+                #__________________________
+
+                # On cherche les autres offres : elles sont associées à la même annonce mais sont différentes de l'offre actuelle.
+                other_offers = self.search([('property_id.id','=',self.property_id.id), ('id','!=',self.id)])
+
+                # On mets à jour le state des autres offres sur 'refused'.
+                other_offers.write({'status':'refused'})
+
+            else:
+                raise UserError("Refused offer can't be accepted !")
+        
+        return True
 
     def action_refuse_offer(self):
+        """
+        Action pour refuser une offre.
+        On ne peut pas refuser une offre déjà acceptée.
+        """
+
         for record in self:
-            record.status = 'refused'
+            if not record.status == 'accepted':
+                record.status = 'refused'
+            else:
+                raise UserError("Accepted offer can't be refused !")
+            
+        return True
