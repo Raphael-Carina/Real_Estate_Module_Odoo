@@ -6,6 +6,7 @@
         <field name="name">Vue des annonces</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_available': True}</field>
     </record>
 
     <!-- Les vues liste affichent les enregistrements sous forme 'tabulaire' (sous forme de ligne) 
