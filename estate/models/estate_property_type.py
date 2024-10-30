@@ -17,4 +17,12 @@ class EstatePropertyType(models.Model):
     # Champs du modèle
     # ================
 
+    # Champs basiques
+    #________________
+
     name = fields.Char(required=True)
+
+    # Champs relationels
+    #___________________
+
+    property_ids = fields.One2many(comodel_name='estate.property', inverse_name='property_type_id')
