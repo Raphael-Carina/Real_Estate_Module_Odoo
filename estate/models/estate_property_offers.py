@@ -54,3 +54,15 @@ class EstatePropertyOffers(models.Model):
 
     Il est à noter qu'une méthode _inverse est appelée lors de l'enregistrement de l'enregistrement tandis qu'une méthode _compute est appelée à chaque modification d'une de ses dépendances.
     """
+
+    # ===========
+    # Les actions
+    # ===========
+
+    def action_accept_offer(self):
+        for record in self:
+            record.status = 'accepted'
+
+    def action_refuse_offer(self):
+        for record in self:
+            record.status = 'refused'
