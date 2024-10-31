@@ -50,5 +50,12 @@
         </field>
     </record>
 
+    <!-- Création d'une action pour le modèle des offres qui sera utilisé pour le stat button du modèle Type -->
+    <record id="estate_property_offers_action" model="ir.actions.act_window">
+        <field name="name">estate.property.offers.action</field>
+        <field name="res_model">estate.property.offers</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('property_type_id','=',active_id)]</field> <!-- ce domain permet d'afficher uniquement les offres correspondant au type actif via le stat button et non pas toutes les offres de tous les types -->
+    </record>
 
 </odoo>
