@@ -18,6 +18,9 @@
                 <sheet>
                     <notebook>
                         <page string="Properties">
+                            <group>
+                                <field name="offer_count"/>
+                            </group>
                         <!-- 
                         On veut afficher la liste des propriétés correspondant à un type de propriété dans l'onglet Properties.
                         Pour cela, on ne veut pas utiliser la vue list du modèle estate.property directement.

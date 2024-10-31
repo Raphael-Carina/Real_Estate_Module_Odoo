@@ -30,7 +30,7 @@ class EstatePropertyOffers(models.Model):
 
     # Le champ suivant (property_type_id) permet de relier l'offre à un type de propriété.
     # L'offre prends le même type de propriété que le type de propriété qui est indiqué dans l'annonce (-> cad dans le modèle estate.property).
-    property_type_id = fields.Many2one(comodel_name='estate.property.type', related='property_id.property_type_id', store=True)
+    property_type_id = fields.Many2one(comodel_name='estate.property.type', related='property_id.property_type_id', store=True) # Champ relatif !
 
     @api.depends("create_date","validity")
     def _compute_date_deadline(self):
