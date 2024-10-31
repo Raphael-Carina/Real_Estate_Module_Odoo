@@ -2,3 +2,4 @@ env/
 data_dir/
 estate/models/__pycache__/
 estate/__pycache__/
+estate/tests/__pycache__/

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+C:\\Users\\Raphaël\\dev\\autoformation\\env\\Scripts\\python.exe ../odoo17/odoo/odoo-bin -c C:\\Users\\Raphaël\\dev\\autoformation\\odoo.conf --addons-path='C:\\Users\\Raphaël\\dev\\odoo17\\odoo\\addons,C:\\Users\\Raphaël\\dev\\odoo17\\odoo\\odoo\\addons,C:\\Users\\Raphaël\\dev\\odoo17\\enterprise,C:\\Users\\Raphaël\\dev\\autoformation' -d db_test_estate --test-file=C:\\Users\\Raphaël\\dev\\autoformation\\estate\\tests\\test_correctly_sold.py
