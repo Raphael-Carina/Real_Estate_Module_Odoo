@@ -55,6 +55,7 @@
         <field name="name">estate.property.offers.action</field>
         <field name="res_model">estate.property.offers</field>
         <field name="view_mode">tree</field>
+        <field name="view_id" ref="estate_property_offers_tree_view"/> <!-- Sans cette ligne, la tree view utilisée serait celle générée automatiquement par Odoo. Cette ligne permet de dire clairement qu'on veut utiliser la tree view déjà définie plus haut. -->
         <field name="domain">[('property_type_id','=',active_id)]</field> <!-- ce domain permet d'afficher uniquement les offres correspondant au type actif via le stat button et non pas toutes les offres de tous les types -->
     </record>
 
