@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<odoo>
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/> <!-- Il n'y à pas de secret pour trouver la vue du modèle parent à modifier. Ici après recherches il s'avère que c'est la vue view_users_form du module base d'Odoo qu'on veut surcharger. -->
+        <field name="arch" type="xml">
+        <!-- Les  xpath permettent d'identifier des éléments dans la vue parent et de pouvoir insérer du contenu via une position relative à ce parent.
+        Dans cet exemple, on recherche la balise <notebook> dans notre vue parent et on ajoute dedans (via inside -> dedans, à la suite) un nouvel onglet Real Estate Properties 
+        dans lequel on ajoute le champ property_ids de notre modèle res.users surchargé. -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Real Estate Properties">
+                    <field name="property_ids"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
