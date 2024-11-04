@@ -228,3 +228,16 @@ class EstateProperty(models.Model):
 
     Une méthode publique doit toujours retourner quelque chose, c'est pour ça qu'on fait au moins un return True.
     """
+
+
+    # ==========
+    # L'héritage
+    # ==========
+
+    # Surcharge de la méthode unlink
+    #_______________________________
+
+    @api.ondelete(at_uninstall=False) # at_uninstall définie si la condition doit également se faire lors de la désinstallation du module
+    def delete_only_new_or_cancelled_properties(self):
+        if not self.state in ["new","cancelled"]:
+            raise ValidationError("Can't delete property with state not on new or cancelled !")
