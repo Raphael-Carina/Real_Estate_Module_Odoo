@@ -1,5 +1,5 @@
 from odoo import api, models, fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class EstatePropertyOffers(models.Model):
     _name = "estate.property.offers"
@@ -114,3 +114,34 @@ class EstatePropertyOffers(models.Model):
                 raise UserError("Accepted offer can't be refused !")
             
         return True
+
+
+    # ==========
+    # L'héritage
+    # ==========
+
+    # Surcharge de la méthode create
+    #_______________________________
+
+    @api.model
+    def create(self, vals):
+        """
+        vals est un dictionnaire qui contient les valeurs des champs saisis par l'utilisateur lors de la création d'une offre depuis l'interface utilisateur.
+        """
+
+        # On veut set le state de l'offre sur 'offer_received' quand une offre est créée ET ne pas pouvoir créer d'offre inférieur aux existantes
+        print(vals)
+        # On récupère la propriété liée à l'offre que l'on veut créer
+        property = self.env['estate.property'].browse(vals['property_id'])
+        print(property.name)
+        # On récupère les offres liées à l'annonce
+        existing_offers = property.offers_ids
+        if existing_offers:
+            highest_price = max(existing_offers.mapped('price'))
+            if vals['price'] <= highest_price:
+                raise ValidationError("Can't create offer with a lower price than existing offers !")
+            
+        # On crée l'offre
+        offer = super().create(vals)
+        offer.property_id.state = "offer_received"
+        return offer
