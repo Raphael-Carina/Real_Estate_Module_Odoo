@@ -239,5 +239,6 @@ class EstateProperty(models.Model):
 
     @api.ondelete(at_uninstall=False) # at_uninstall définie si la condition doit également se faire lors de la désinstallation du module
     def delete_only_new_or_cancelled_properties(self):
-        if not self.state in ["new","cancelled"]:
-            raise ValidationError("Can't delete property with state not on new or cancelled !")
+        for record in self:
+            if not record.state in ["new","cancelled"]:
+                raise ValidationError("Can't delete property with state not on new or cancelled !")
