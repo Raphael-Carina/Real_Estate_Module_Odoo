@@ -27,7 +27,7 @@
                                 <field name="offer_count"/>
                             </group>
                         <!-- 
-                        On veut afficher la liste des propriétés correspondant à un type de propriété dans l'onglet Properties.
+                        On veut afficher la liste des propriétés correspondant à un type de propriété dans l'onglet "Properties".
                         Pour cela, on ne veut pas utiliser la vue list du modèle estate.property directement.
                         On souhaite utilisé une vue list sur mesure, utilisée uniquement dans le contexte du modèle des types.
 
