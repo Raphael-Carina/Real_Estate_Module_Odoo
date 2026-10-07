@@ -12,8 +12,12 @@
         'views/estate_menus.xml',
         'views/res_users_views.xml',
 
-        # Données de base du module estate.property.type (directement à l'installation du module).
+        # DATAS
+        # Données de base du modèle estate.property.type (directement à l'installation du module).
         'data/estate.property.type.csv',
+
+        # Données de base du modèle estate.property
+        'data/estate_property_data.xml',
 
         'security/ir.model.access.csv',
         ]
