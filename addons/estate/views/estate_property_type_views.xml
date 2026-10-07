@@ -5,7 +5,7 @@
     <record id="estate_property_type_action" model="ir.actions.act_window">
         <field name="name">Property Type</field>
         <field name="res_model">estate.property.type</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 
@@ -32,16 +32,16 @@
                         On souhaite utilisé une vue list sur mesure, utilisée uniquement dans le contexte du modèle des types.
 
                         Pour cela, on ouvre un <field> avec le champ property_ids qui est le One2many de estate.property.type qui fait le lien avec estate.property.
-                        Ensuite, on créer une nouvelle <tree> avec les champs du modèle estate.property à afficher.
+                        Ensuite, on créer une nouvelle <list> avec les champs du modèle estate.property à afficher.
 
-                        Si on avait voulu utiliser directement la vue list du modèle estate.property, on aurait pu simplement faire : <field name="property_ids"/> (sans le tree après).
+                        Si on avait voulu utiliser directement la vue list du modèle estate.property, on aurait pu simplement faire : <field name="property_ids"/> (sans le list après).
                          -->
                             <field name="property_ids">
-                                <tree>
+                                <list>
                                     <field name="name"/>
                                     <field name="expected_price"/>
                                     <field name="state"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -50,19 +50,19 @@
         </field>
     </record>
 
-    <!-- Tree view pour le modèle des Types -->
+    <!-- List view pour le modèle des Types -->
     <!-- 
-    On utilise le champ 'sequence' du modèle, couplé à un widget="handle" pour pouvoir gérer l'ordre des types dans la tree view de façon manuelle.
+    On utilise le champ 'sequence' du modèle, couplé à un widget="handle" pour pouvoir gérer l'ordre des types dans la list view de façon manuelle.
      -->
      
-    <record id="estate_property_type_tree_view" model="ir.ui.view">
-        <field name="name">estate.property.type.tree.view</field>
+    <record id="estate_property_type_list_view" model="ir.ui.view">
+        <field name="name">estate.property.type.list.view</field>
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 

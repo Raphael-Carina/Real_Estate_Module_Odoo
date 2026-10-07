@@ -22,7 +22,7 @@ class EstatePropertyType(models.Model):
     #________________
 
     name = fields.Char(required=True)
-    sequence = fields.Integer(string="Sequence", default=1, help="Used to order type.") # Champ utilisé pour gérer l'order manuel dans la tree view du modèle
+    sequence = fields.Integer(string="Sequence", default=1, help="Used to order type.") # Champ utilisé pour gérer l'order manuel dans la list view du modèle
 
     # Champs relationels
     #___________________
