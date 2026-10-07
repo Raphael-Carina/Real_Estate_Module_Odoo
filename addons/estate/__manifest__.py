@@ -19,6 +19,9 @@
         # Données de base du modèle estate.property
         'data/estate_property_data.xml',
 
+        # Données de base pour le modèle estate.property.offers
+        'data/estate_property_offers_data.xml',
+
         'security/ir.model.access.csv',
         ]
 }
