@@ -21,6 +21,7 @@
                             <field name="offer_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <h1><field name="name"/></h1>
                     <notebook>
                         <page string="Properties">
                             <group>
