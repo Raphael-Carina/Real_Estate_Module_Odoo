@@ -35,6 +35,28 @@
             <field name="create_date" eval="datetime.now()"/>
         </record>
 
+        <!--
+        Il est possible d'appeler des fonctions de nos modèles sur les enregistrements que l'on crée.
+        Ici on accepte l'offre 'offer_3' et on refuse les 2 autres ('offer_1' et 'offer_2').
+
+        Odoo appelle la méthode avec la même convention que les appels RPC (call_kw).
+        Pour une méthode qui utilise self (ce qui est le cas de nos méthode action_accept_offer et action_refuse_offer),
+        le premier <value> corresponds aux ID sur lesquels vont s'exécuter la méthode.
+        Si la méthode attendait des arguments positionnels, il faudrait ajouter des balise <value> et assigner des valeurs,
+        dans l'ordre des arguments de la méthode.
+        -->
+        <function model="estate.property.offers" name="action_accept_offer">
+            <value eval="[ref('estate.offer_3')]"/>
+        </function>
+
+        <function model="estate.property.offers" name="action_refuse_offer">
+            <value eval="[ref('estate.offer_1')]"/>
+        </function>
+
+        <function model="estate.property.offers" name="action_refuse_offer">
+            <value eval="[ref('estate.offer_2')]"/>
+        </function>
+
     </data>
 
 </odoo>
