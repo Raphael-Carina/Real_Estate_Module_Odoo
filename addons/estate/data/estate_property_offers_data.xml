@@ -6,12 +6,17 @@
 
         <!-- 
         On créer par défaut 3 offres liées à l'annonce 'Big Villa' à l'installation du module.
+
+        eval permet d'évaluer du code Python.
+             Ici on s'en sert pour définir la valeur de create date de nos offres au jour d'installation du module.
+             (ça sert pas à grand chose puisque le champ est déjà défini comme fields.Datetime.now() mais c'est pour montrer que ça marche).
         -->
         <record id="offer_1" model="estate.property.offers">
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="property_id" ref="estate.property_1"/>
             <field name="price">10000</field>
             <field name="validity">14</field>
+            <field name="create_date" eval="datetime.now()"/>
         </record>
 
         <record id="offer_2" model="estate.property.offers">
@@ -19,6 +24,7 @@
             <field name="property_id" ref="estate.property_1"/>
             <field name="price">1500000</field>
             <field name="validity">14</field>
+            <field name="create_date" eval="datetime.now()"/>
         </record>
 
         <record id="offer_3" model="estate.property.offers">
@@ -26,6 +32,7 @@
             <field name="property_id" ref="estate.property_1"/>
             <field name="price">1500001</field>
             <field name="validity">14</field>
+            <field name="create_date" eval="datetime.now()"/>
         </record>
 
     </data>

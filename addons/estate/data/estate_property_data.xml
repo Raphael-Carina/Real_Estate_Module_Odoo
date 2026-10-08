@@ -19,6 +19,17 @@
         <field name="expected_price"></field>
 
         Il faut tout simplement ne pas l'indiquer si on veut laisser un champ vide.
+
+        Avec la notation <field name="xxx">value</field>, Odoo va automatiquement faire les conversion de type en fonction
+        des types de champs à remplir.
+        C'est à dire que pour le expected_price par exemple, Odoo converti automatiquement notre valeur 1600000 (str) en float.
+        C'est pour ça que la ligne <field name="expected_price"></field> fait planter car Odoo tente de convertir '' (vide) en float.
+
+        ref permet d'assigner une valeur de type Many2one à un champ via l'ID externe de l'enregistrement ciblé.
+        eval permet de fournir une expression en Python pour calculer la valeur d'un champ. (attention ça n'a rien à voir avec les champs computes).
+             l'expression est traité à l'installation (et potentiellement à la maj si pas de noupdate) du module puis la valeur est stockée en BDD.
+             Une utilisation courante du eval consiste à faire : <field name="xxx" eval="False"/> afin de ne définir aucune valeur à un champ (y compris sur un champ non booléen, c'est tout l'intérêt).
+             En effet, <field name="xxx">False</field> sur un champ non-booléen ne fonctionnerait pas.
         -->
 
         <record id="property_1" model="estate.property">
