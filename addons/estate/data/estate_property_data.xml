@@ -64,6 +64,40 @@
             <field name="property_type_id" ref="estate.type_1"/>
         </record>
 
+        <!--
+        Pour la propriété 'Big Villa' créer précédemment, on a créer des offres dans estate_property_offers_data.xml
+        qu'on à liées à la propriété 'Big Villa'.
+
+        Une autre façon de faire est d'utiliser Command.create pour créer directement une (ou des) offre depuis l'annonce,
+        comme dans l'exemple qui suit 'Bourg House'.
+        -->
+        <record id="property_3" model="estate.property">
+            <field name="name">Bourg House</field>
+            <field name="state">new</field>
+            <field name="description">A cozy house in a nice bourg</field>
+            <field name="postcode">12345</field>
+            <field name="date_availability">2020-02-02</field>
+            <field name="expected_price">130000</field>
+            <field name="bedrooms">2</field>
+            <field name="living_area">100</field>
+            <field name="facades">4</field>
+            <field name="garage">False</field>
+            <field name="garden">False</field>
+            <field name="garden_area" eval="False"/> <!-- garden_area est de type Integer, donc je ne peux pas faire "<field name="garden_area">False</field>" car Odoo essaierai de convertir False en Integer. Il faut passer par eval dans ce cas pour définir une valeur vide (nulle). -->
+            <field name="garden_orientation" eval="False"></field>
+            <field name="property_type_id" ref="estate.type_1"/>
+
+            <!-- On créer une offre directement via Command.create -->
+            <field name="offers_ids" eval="[
+                Command.create({
+                    'price': 105000,
+                    'partner_id': ref('base.res_partner_2'),
+                    'validity': 14,
+                    'create_date': datetime.now(),
+                    })
+                ]"/>
+        </record>
+
     </data>
 
 </odoo>
