@@ -134,4 +134,32 @@ id,parent_id:id,name
 
     </data>
 
+<!--
+Petit point sur les id externe :
+
+Il s'agit d'un identifiant textuel stable pour un enregistrement, en plus de son ID.
+Il n'est pas stocké au niveau de l'enregistrement, c'est à dire qu'il n'y a pas de colonne 'id externe' sur les tables Odoo.
+Les id externes sont bien stockés en base de données, mais pas dans la table de l’enregistrement lui-même.
+L'idée c'est qu'Odoo centralise tous les xml_id (id externe) dans une seule table : ir_model_data.
+
+Le problème qu’il résout : 
+l’id numérique est attribué par PostgreSQL à la création, donc il change d’une base à l’autre.
+Si un module crée un groupe de sécurité, il aura peut-être l’id 42 chez toi et 87 chez un client.
+On ne peux donc pas écrire dans le code « le groupe 42 ».
+
+ir_model_data sert donc de table de correspondance entre le nom stable (module+name) et l'enregistrement (model+res_id).
+La table de l'enregistrement lui-même n'a aucune trace du xml_id.
+
+Un xml_id n'existe que si quelque chose l'a créé explicitement, par exemple :
+
+    <record id="group_manager" model="res.groups">
+        <field name="name">Manager</field>
+    </record>
+
+    -> si le module se nomme 'mon_module', l'enregistrement aura comme xml_id : mon_module.group_manager .
+       Au chargement du fichier XML, Odoo créer l'enregistrement res.groups puis ajoute une ligne dans ir_model_data.
+
+Les exports : quand on exporte des enregistrements en incluant l’ID externe, Odoo en génère un à la volée pour ceux qui n’en ont pas, sous la forme __export__.res_partner_123_abcd1234.
+-->
+
 </odoo>
