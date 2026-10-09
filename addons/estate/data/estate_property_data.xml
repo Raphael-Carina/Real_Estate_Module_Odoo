@@ -7,6 +7,14 @@ Dans la documentation Odoo on parle de :
 
 Pour accéder aux master data on fait :
 - En Python : env.ref(self, xml_id, raise_if_not_found=True). Cette méthode retourne le recordset lié à l'xml_id renseingé.
+  Voici un exemple réalisé en mode shell :
+
+    >>> big_villa = env.ref('estate.property_1')
+    >>> big_villa.name
+    'Big Villa'
+    >>> big_villa.expected_price
+    1600000.0
+
 - En XML :
     <odoo>
     <record id="id1" model="tutorial.example">
