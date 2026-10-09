@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Création d'un group pour les utilisateurs (real-estate agent). -->
+    <record id="estate_group_user" model="res.groups">
+        <field name="name">Agent</field>
+        <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
+        <field name="comment">The user will be able to manage the properties under his care, or property which are not under the care of any agent</field>
+    </record>
+
+    <!-- Création d'un group pour les manageurs. -->
+    <record id="estate_group_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('estate.estate_group_user')])]"/>
+        <field name="comment">The manager can configure the system (available types and tags) as well as oversee every property in the pipeline</field>
+    </record>
+
+    <!--
+    Dans les groups définis ci-dessus, on utilise la categorie base.module_category_real_estate_brokerage.
+
+    Cette catégorie est créée automatiquement pas Odoo grâce à la catégorie que l'on a défini dans le manifest du module estate :
+    'category': "Real Estate/Brokerage",
+
+    Lorsque l'on indique cette catégorie dans le manifest de notre module, Odoo génère automatiquement les 2 catégories suivantes (ir.module.category):
+    - Real Estate : avec l'xml_id base.module_category_real_estate
+    - Brokerage : avec l'xml_id base.module_category_real_estate_brokerage (enfant de Real Estate)
+
+    Pour faire ces xml_id, Odoo split sur les '/', passe tout en minuscule, remplace les ' ' par '_' et les '&' par 'and'.
+    (ATTENTION, pour les xml_id c'est bien "base." et non pas estate. !!!, puis il y a toujours le préfix module_category_).
+
+    Dans nos groupes ci-dessus, on peut référencer ces categories car elles existent bien déjà (le fichier manifest est chargé avant le reste).
+
+    Dans la vue des droits d'accès (Utilisateurs > Droits d'accès), Odoo se base sur les catégorie du module pour l'affichage de la vue.
+    Ici, on retrouve une rubrique "Real Estate" et un "champ" nommé "Brokerage" généré automatiquement (cette vue est un peu particulière).
+    Sans les catégories, tout apparaitrait dans "others".
+
+    L’intérêt pratique des catégories est le suivant:
+    Dans le formulaire des droits d'accès utilisateur (Utilisateurs > Droits d'accès), les groupes d’une même catégorie liés par implied_ids s’affichent
+    sous la forme d’un seul champ de sélection (vide / Agent / Manager), regroupé sous l’en-tête de la catégorie. Sans catégorie, on obtient une simple liste de cases à cocher.
+    Et sans le implied_ids du groupe Manager, on aurait également une liste à cocher.
+
+    Récapitulatif:
+    - si on retire les 'category_id' des groupes, on se retrouve avec 2 cases à cocher dans les droits d'accès utilisateurs dans la rubrique "Others" ('Agent' et 'Manager').
+    - si on retire le 'implied_ids' du groupe 'Manager', la rubrique devient "Brokerage", mais on a toujours 2 cases à cocher ('Agent' et 'Manager').
+    - en l'état (avec les category_id et le implied_ids), on a une rubrique "Real Estate" et le champ "Brokerage" est une sélection (vide/Agent/Manager).
+
+    Ce qu'il faut retenir c'est que les catégories ont un rôle purement cosmétiques, qui permettent à Odoo de générer un beau rendu de la page des droits d'accès.
+    -->
+
+    <!--
+    Si on souhaite créer plusieurs catégories dans la même rubrique, le mieux est de créer des catégories dans le xml,
+    comme dans l'exemple ci-dessous :
+    -->
+    <record id="estate_category_test" model="ir.module.category">
+        <field name="name">Test</field>
+        <field name="parent_id" ref="base.module_category_real_estate"/>
+    </record>
+
+    <record id="estate_group_test_1" model="res.groups">
+        <field name="name">Test 1</field>
+        <field name="category_id" ref="estate.estate_category_test"/>
+    </record>
+
+    <record id="estate_group_test_2" model="res.groups">
+        <field name="name">Test 2</field>
+        <field name="category_id" ref="estate.estate_category_test"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('estate.estate_group_test_1')])]"/>
+    </record>
+    <!---->
+
+</odoo>
