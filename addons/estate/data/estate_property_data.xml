@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+Dans la documentation Odoo on parle de :
+- master data : ce sont les données de base, créées dans data/ (c'est le cas ici). Il s'agit de données que l'on créer à l'installation du module (et à la maj du module si noupdate="0").
+- demo data : ce sont des données de démo, créées dans demo/ .
+
+Pour accéder aux master data on fait :
+- En Python : env.ref(self, xml_id, raise_if_not_found=True). Cette méthode retourne le recordset lié à l'xml_id renseingé.
+- En XML :
+    <odoo>
+    <record id="id1" model="tutorial.example">
+        <field name="related_id" ref="module.relatedid"/>
+    </record>
+    </odoo>
+
+    -> cela va appeler la méthode ref et stocker l'ID trouver dans le champ related_id du record d'ID id1 de tutorial.example .
+
+Dans un fichier csv, pour remplir des champs relationnel, il faut faire suivre le nom de la colonne par ":id" :
+id,parent_id:id,name
+"child1","module.parent","Name1"
+"child2","module.parent","Name2"
+"child3","module.parent","Name3"
+
+-> pour l'instance "Name1", on rempli le champ parent_id avec le recorset d'ID externe module.parent.
+
+-->
+
 <odoo>
 
     <!-- 
