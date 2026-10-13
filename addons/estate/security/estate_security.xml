@@ -69,4 +69,27 @@
     </record>
     <!---->
 
+    <!--
+    Il existe des catégories intéressantes créées par Odoo.
+    On peut s'en servir.
+    Par exemple ici j'ajoute un nouveau 'groupe' dans la rubrique (catégorie) "Administration" de la page des droits d'accès.
+    -->
+    <!-- Nouvelle catégorie, enfante de "Administration" native d'Odoo (odoo/odoo/addons/base/data/ir_module_category_data.xml). -->
+    <record id="estate_category_test_2" model="ir.module.category">
+        <field name="name">Test 2</field>
+        <field name="parent_id" ref="base.module_category_administration"/>
+    </record>
+
+    <!-- 2 nouveaux groupes liés à la catégorie Test 2. -->
+    <record id="estate_group_test_3" model="res.groups">
+        <field name="name">Test 3</field>
+        <field name="category_id" ref="estate.estate_category_test_2"/>
+    </record>
+
+    <record id="estate_group_test_4" model="res.groups">
+        <field name="name">Test 4</field>
+        <field name="category_id" ref="estate.estate_category_test_2"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('estate.estate_group_test_3')])]"/>
+    </record>
+
 </odoo>
