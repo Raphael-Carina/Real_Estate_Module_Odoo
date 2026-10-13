@@ -18,6 +18,7 @@
 
     <!--
     Dans les groups définis ci-dessus, on utilise la categorie base.module_category_real_estate_brokerage.
+    Les vrais display_name de ces groupes sont Brokerage/Agent et Brokerage/Manager.
 
     Cette catégorie est créée automatiquement pas Odoo grâce à la catégorie que l'on a défini dans le manifest du module estate :
     'category': "Real Estate/Brokerage",
