@@ -13,7 +13,7 @@
         'views/estate_menus.xml',
         'views/res_users_views.xml',
 
-        'security/ir.model.access.csv',
         'security/estate_security.xml',
+        'security/ir.model.access.csv',
         ]
 }
