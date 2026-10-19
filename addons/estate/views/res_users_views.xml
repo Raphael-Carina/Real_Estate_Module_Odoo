@@ -10,7 +10,7 @@
         Dans cet exemple, on recherche la balise <notebook> dans notre vue parent et on ajoute dedans (via inside -> dedans, à la suite) un nouvel onglet Real Estate Properties 
         dans lequel on ajoute le champ property_ids de notre modèle res.users surchargé. -->
             <xpath expr="//notebook" position="inside">
-                <page string="Real Estate Properties">
+                <page string="Real Estate Properties" groups="estate.estate_group_user">
                     <field name="property_ids"/>
                 </page>
             </xpath>
