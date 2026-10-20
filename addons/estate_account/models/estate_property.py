@@ -12,6 +12,7 @@ class EstateProperty(models.Model):
         invoice = self.env['account.move'].create({
             'partner_id' : self.buyer.id,
             'move_type': 'out_invoice',
+            'journal_id': self.env['account.journal'].search([('type', '=', 'sale')], limit=1),
 
             # Création de ligne de facture (invoice lines)
             'invoice_line_ids' : [
