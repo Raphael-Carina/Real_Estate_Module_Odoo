@@ -82,6 +82,14 @@ class EstateProperty(models.Model):
 
     offers_ids = fields.One2many(comodel_name='estate.property.offers', inverse_name='property_id', string="Offers")
 
+    company_id = fields.Many2one(
+        string="Company",
+        comodel_name="res.company",
+        default=lambda self: self.env.user.company_id,
+        required=True,
+        copy=False,
+    )
+
     """
     Explications sur les différents fields et leurs attributs possibles :
     _____________________________________________________________________
