@@ -1,8 +1,9 @@
 from odoo import api, models, fields
 
 class EstatePropertyType(models.Model):
+    """Model used to create new type of properties, used un the estate.property model to create instance"""
     _name = 'estate.property.type'
-    _description = """Model used to create new type of properties, used un the estate.property model to create instance"""
+    _description = "Estate Property Type"
     _order = "sequence, name"
 
     # ===============

@@ -7,8 +7,9 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class EstateProperty(models.Model):
+    """This model is used to create real estate properties ads"""
     _name = "estate.property"
-    _description = """This model is used to create real estate properties ads"""
+    _description = "Estate Property"
     _order = "id desc" # Les plus récentes en haut
 
     # ===============

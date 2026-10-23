@@ -2,8 +2,9 @@ from odoo import api, models, fields
 from odoo.exceptions import UserError, ValidationError
 
 class EstatePropertyOffers(models.Model):
+    """Model used to create offers for a given record of estate.property model."""
     _name = "estate.property.offers"
-    _description = """Model used to create offers for a given record of estate.property model."""
+    _description = "Estate Property Offers"
     _order = "price desc" # Les plus chères en haut
 
     # ===============
