@@ -115,7 +115,7 @@
 
     !!! Règle à savoir !!!
     Lorsque des règles se combinent et concernent des groupes (ce qui est le cas ici), elles se combinent avec un OU.
-    Lorsque des règles se combinent mais ne concernent pas de groupes, elles se combinent avec un ET.
+    Lorsque des règles se combinent mais ne concernent pas de groupes (règles globales), elles se combinent avec un ET.
     Quand je dis "concernent des groupes", ça veut dire que l'ir.rule à une balise "groups" (-> elle est attachée à un res.groups).
 
     Donc, dans le cas d'un Manager, les 2 ir.rule se combinent avec un OU, ce qui donne :
@@ -164,6 +164,35 @@
         <field name="groups" eval="[Command.link(ref('estate.estate_group_manager'))]"/>
         <field name="domain_force">[
         (1, '=', 1)
+        ]</field>
+    </record>
+
+    <!--
+    Règle globale :
+    _______________
+    
+    Une règle globale ne s'applique pas un groupe particulier mais à tout le monde.
+    Comme déjà expliqué plus haut, des règles globales s'associent avec les autres règles avec un ET logique
+    (alors que des règles de groupes s'associent avec un OU logique).
+
+    Précédemment on avait créer une règle de groupe pour que les Agents ne puissent voir que les annonces qui leurs
+    appartiennent.
+    Ici on créer une règle globale pour que les utilisateurs (donc y compris les Agents) ne puissent voir que les annonces
+    de leur société.
+    Ainsi, les Agents ne verront que les annonces de leur société ET qui leur appartiennent.
+
+    La règle globale 'estate_property_multi_company_rule' indique que l'on autorise l'accès aux annonces qui soit :
+    - n'ont pas de société (ce qui n'est pas censé être le cas)
+    - ont une société qui corresponds à une des société de l'utilisateur.
+    -->
+
+    <record id="estate_property_multi_company_rule" model="ir.rule">
+        <field name="name">Estate Property: Multi-Company Rule</field>
+        <field name="model_id" ref="estate.model_estate_property"/>
+        <field name="domain_force">[
+        '|',
+        ('company_id', '=', False),
+        ('company_id', 'in', company_ids)
         ]</field>
     </record>
 
