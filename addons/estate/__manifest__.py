@@ -4,13 +4,18 @@
     'author': "d'Artagnan",
     'description': """This module is used to create/organize estate properties.""",
     'depends': ['base'],
+    'category': 'Real Estate/Brokerage',
     'data': [
+        'security/estate_security.xml',
+        'security/ir.model.access.csv',
+
         'views/estate_property_views.xml',
         'views/estate_property_tags_views.xml',
         'views/estate_property_offers_views.xml',
         'views/estate_property_type_views.xml',
         'views/estate_menus.xml',
         'views/res_users_views.xml',
+<<<<<<< HEAD
 
         # DATAS
         # Données de base du modèle estate.property.type (directement à l'installation du module).
@@ -23,5 +28,7 @@
         'data/estate_property_offers_data.xml',
 
         'security/ir.model.access.csv',
+=======
+>>>>>>> restrict_access_to_data
         ]
 }

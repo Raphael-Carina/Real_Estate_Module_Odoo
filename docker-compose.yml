@@ -2,7 +2,7 @@
 
 services:
   od:
-    image: odoo:18.0
+    image: odoo:18.0-20261015
     depends_on:
       - db
     ports:

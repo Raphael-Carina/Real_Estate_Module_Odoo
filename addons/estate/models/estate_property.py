@@ -7,8 +7,9 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class EstateProperty(models.Model):
+    """This model is used to create real estate properties ads"""
     _name = "estate.property"
-    _description = """This model is used to create real estate properties ads"""
+    _description = "Estate Property"
     _order = "id desc" # Les plus récentes en haut
 
     # ===============
@@ -80,6 +81,14 @@ class EstateProperty(models.Model):
     tags_ids = fields.Many2many(comodel_name='estate.property.tags')
 
     offers_ids = fields.One2many(comodel_name='estate.property.offers', inverse_name='property_id', string="Offers")
+
+    company_id = fields.Many2one(
+        string="Company",
+        comodel_name="res.company",
+        default=lambda self: self.env.user.company_id,
+        required=True,
+        copy=False,
+    )
 
     """
     Explications sur les différents fields et leurs attributs possibles :

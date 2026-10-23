@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Création d'un group pour les utilisateurs (real-estate agent). -->
+    <record id="estate_group_user" model="res.groups">
+        <field name="name">Agent</field>
+        <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
+        <field name="comment">The user will be able to manage the properties under his care, or property which are not under the care of any agent</field>
+    </record>
+
+    <!-- Création d'un group pour les manageurs. -->
+    <record id="estate_group_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('estate.estate_group_user')])]"/>
+        <field name="comment">The manager can configure the system (available types and tags) as well as oversee every property in the pipeline</field>
+    </record>
+
+    <!--
+    Dans les groups définis ci-dessus, on utilise la categorie base.module_category_real_estate_brokerage.
+    Les vrais display_name de ces groupes sont Brokerage/Agent et Brokerage/Manager.
+
+    Cette catégorie est créée automatiquement pas Odoo grâce à la catégorie que l'on a défini dans le manifest du module estate :
+    'category': "Real Estate/Brokerage",
+
+    Lorsque l'on indique cette catégorie dans le manifest de notre module, Odoo génère automatiquement les 2 catégories suivantes (ir.module.category):
+    - Real Estate : avec l'xml_id base.module_category_real_estate
+    - Brokerage : avec l'xml_id base.module_category_real_estate_brokerage (enfant de Real Estate)
+
+    Pour faire ces xml_id, Odoo split sur les '/', passe tout en minuscule, remplace les ' ' par '_' et les '&' par 'and'.
+    (ATTENTION, pour les xml_id c'est bien "base." et non pas estate. !!!, puis il y a toujours le préfix module_category_).
+
+    Dans nos groupes ci-dessus, on peut référencer ces categories car elles existent bien déjà (le fichier manifest est chargé avant le reste).
+
+    Dans la vue des droits d'accès (Utilisateurs > Droits d'accès), Odoo se base sur les catégorie du module pour l'affichage de la vue.
+    Ici, on retrouve une rubrique "Real Estate" et un "champ" nommé "Brokerage" généré automatiquement (cette vue est un peu particulière).
+    Sans les catégories, tout apparaitrait dans "others".
+
+    L’intérêt pratique des catégories est le suivant:
+    Dans le formulaire des droits d'accès utilisateur (Utilisateurs > Droits d'accès), les groupes d’une même catégorie liés par implied_ids s’affichent
+    sous la forme d’un seul champ de sélection (vide / Agent / Manager), regroupé sous l’en-tête de la catégorie. Sans catégorie, on obtient une simple liste de cases à cocher.
+    Et sans le implied_ids du groupe Manager, on aurait également une liste à cocher.
+
+    Récapitulatif:
+    - si on retire les 'category_id' des groupes, on se retrouve avec 2 cases à cocher dans les droits d'accès utilisateurs dans la rubrique "Others" ('Agent' et 'Manager').
+    - si on retire le 'implied_ids' du groupe 'Manager', la rubrique devient "Brokerage", mais on a toujours 2 cases à cocher ('Agent' et 'Manager').
+    - en l'état (avec les category_id et le implied_ids), on a une rubrique "Real Estate" et le champ "Brokerage" est une sélection (vide/Agent/Manager).
+
+    Ce qu'il faut retenir c'est que les catégories ont un rôle purement cosmétiques, qui permettent à Odoo de générer un beau rendu de la page des droits d'accès.
+    -->
+
+    <!--
+    Si on souhaite créer plusieurs catégories dans la même rubrique, le mieux est de créer des catégories dans le xml,
+    comme dans l'exemple ci-dessous :
+    -->
+    <record id="estate_category_test" model="ir.module.category">
+        <field name="name">Test</field>
+        <field name="parent_id" ref="base.module_category_real_estate"/>
+    </record>
+
+    <record id="estate_group_test_1" model="res.groups">
+        <field name="name">Test 1</field>
+        <field name="category_id" ref="estate.estate_category_test"/>
+    </record>
+
+    <record id="estate_group_test_2" model="res.groups">
+        <field name="name">Test 2</field>
+        <field name="category_id" ref="estate.estate_category_test"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('estate.estate_group_test_1')])]"/>
+    </record>
+    <!---->
+
+    <!--
+    Il existe des catégories intéressantes créées par Odoo.
+    On peut s'en servir.
+    Par exemple ici j'ajoute un nouveau 'groupe' dans la rubrique (catégorie) "Administration" de la page des droits d'accès.
+    -->
+    <!-- Nouvelle catégorie, enfante de "Administration" native d'Odoo (odoo/odoo/addons/base/data/ir_module_category_data.xml). -->
+    <record id="estate_category_test_2" model="ir.module.category">
+        <field name="name">Test 2</field>
+        <field name="parent_id" ref="base.module_category_administration"/>
+    </record>
+
+    <!-- 2 nouveaux groupes liés à la catégorie Test 2. -->
+    <record id="estate_group_test_3" model="res.groups">
+        <field name="name">Test 3</field>
+        <field name="category_id" ref="estate.estate_category_test_2"/>
+    </record>
+
+    <record id="estate_group_test_4" model="res.groups">
+        <field name="name">Test 4</field>
+        <field name="category_id" ref="estate.estate_category_test_2"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('estate.estate_group_test_3')])]"/>
+    </record>
+    <!---->
+
+    <!--
+    __________________________________________
+    Règles sur les enregistrements (ir.rule) :
+    __________________________________________
+
+    Objectifs:
+    - faire en sorte que les Agents ne puisse voir/modifier que leur propres annonces (celles où ils sont définis en tant que salesperson),
+    et/ou celles où personne n'est défini en salesperson.
+    - faire en sorte que les Manager puissent voir/modifier toutes les annonces.
+
+    Plusieurs choses un peu compliquées à comprendre :
+    1)
+    Plus haut, on a fait en sorte que Manager implique Agent (via implied_ids dans la définition des groupes).
+    Cela a pour effet que si on créer une règles sur les enregistrements pour les Agents, alors elle s'appliquera également aux Manager!
+    Dans l'exmple ci-dessous, on créer une ir.rule 'estate_group_user_property_rule' pour que les Agents ne puissent voir que leurs annonces (où les annonces n'appartenant à personne).
+    Avec uniquement cette ir.rule, les Managers aurait exactement la même contrainte, c'est à dire qu'ils ne pourraient voir que leurs propres annonces (ou celles n'appartenant à personne).
+
+    Pour palier ce problème, la solution est de créer une ir.rule propre au groupe des Managers, avec un domain qui laisse tout passer, à savoir 1 = 1.
+
+    !!! Règle à savoir !!!
+    Lorsque des règles se combinent et concernent des groupes (ce qui est le cas ici), elles se combinent avec un OU.
+    Lorsque des règles se combinent mais ne concernent pas de groupes (règles globales), elles se combinent avec un ET.
+    Quand je dis "concernent des groupes", ça veut dire que l'ir.rule à une balise "groups" (-> elle est attachée à un res.groups).
+
+    Donc, dans le cas d'un Manager, les 2 ir.rule se combinent avec un OU, ce qui donne :
+
+    (salesperon = moi-même OU salsperson = False) OU (1 = 1) ==> Ce qui donne accès à tout.
+
+    2)
+    On ne peut pas définir des droits d'accès via les ir.rule !
+    C'est à dire que les balise "perm_read", "perm_write", "perm_create" et "perm_unlink" ne signifient pas : "je donne les droits en lecture, en création etc..."
+    Ces balises signifie : la règles que je défini au travers de cette ir.rule s'applique lors de la lecture, de la création, de l'enregistrement, de la suppression...
+
+    Par exemple, dans la ir.rule des Agents 'estate_group_user_property_rule':
+    Si on met "<field name="perm_read" eval="False"/>", ça veut dire que la règle ne s'appliquera pas durant la lecture.
+    Donc, dans ce cas les Agents auraient accès à la lecture des annonces de leurs collègue.
+
+    Claude:
+    Une règle ne donne donc jamais de droit. Les perm_* indiquent pour quelles opérations le domaine de la règle sert de filtre :
+
+    perm_read=True : à la lecture, l’utilisateur ne voit que les enregistrements qui respectent le domaine.
+    perm_read=False : la règle est ignorée en lecture, et l’utilisateur voit tout ce que l’ACL lui permet.
+
+    Le nom est trompeur : il faut lire perm_read comme « appliquer à la lecture » et non comme « autoriser la lecture ».
+
+    NB: par défaut, les perm_* sont déjà True dans une ir.rule, on pourrait donc les retirer dans nos ir.rule si dessous, mais c'est plus lisible de les garder.
+    -->
+    <record id="estate_group_user_property_rule" model="ir.rule">
+        <field name="name">Agents only being able to see/modify properties which have salesperson, or for which they are the salesperson</field>
+        <field name="model_id" ref="estate.model_estate_property"/> <!-- Attention, le modèle cible doit avoir des '_' et non des '.' et être précédé par 'model_'. -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[Command.link(ref('estate.estate_group_user'))]"/>
+        <field name="domain_force">[
+        '|', ('salesperson', '=', False), ('salesperson', '=', user.id)
+        ]</field>
+    </record>
+
+    <record id="estate_group_manager_property_rule" model="ir.rule">
+        <field name="name">Manager are able to read/modify all properties</field>
+        <field name="model_id" ref="estate.model_estate_property"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[Command.link(ref('estate.estate_group_manager'))]"/>
+        <field name="domain_force">[
+        (1, '=', 1)
+        ]</field>
+    </record>
+
+    <!--
+    Règle globale :
+    _______________
+    
+    Une règle globale ne s'applique pas un groupe particulier mais à tout le monde.
+    Comme déjà expliqué plus haut, des règles globales s'associent avec les autres règles avec un ET logique
+    (alors que des règles de groupes s'associent avec un OU logique).
+
+    Précédemment on avait créer une règle de groupe pour que les Agents ne puissent voir que les annonces qui leurs
+    appartiennent.
+    Ici on créer une règle globale pour que les utilisateurs (donc y compris les Agents) ne puissent voir que les annonces
+    de leur société.
+    Ainsi, les Agents ne verront que les annonces de leur société ET qui leur appartiennent.
+
+    La règle globale 'estate_property_multi_company_rule' indique que l'on autorise l'accès aux annonces qui soit :
+    - n'ont pas de société (ce qui n'est pas censé être le cas)
+    - ont une société qui corresponds à une des société de l'utilisateur.
+    -->
+
+    <record id="estate_property_multi_company_rule" model="ir.rule">
+        <field name="name">Estate Property: Multi-Company Rule</field>
+        <field name="model_id" ref="estate.model_estate_property"/>
+        <field name="domain_force">[
+        '|',
+        ('company_id', '=', False),
+        ('company_id', 'in', company_ids)
+        ]</field>
+    </record>
+
+</odoo>
