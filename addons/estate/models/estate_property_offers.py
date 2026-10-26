@@ -134,6 +134,11 @@ class EstatePropertyOffers(models.Model):
         # On récupère la propriété liée à l'offre que l'on veut créer
         property = self.env['estate.property'].browse(vals['property_id'])
         print(property.name)
+
+        # Si l'annonce est vendue, on bloque la création de l'offre
+        if property.state == 'sold':
+            raise ValidationError("Can't create offre for an already sold property !")
+
         # On récupère les offres liées à l'annonce
         existing_offers = property.offers_ids
         if existing_offers:
