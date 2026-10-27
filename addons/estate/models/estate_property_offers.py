@@ -124,25 +124,29 @@ class EstatePropertyOffers(models.Model):
     # Surcharge de la méthode create
     #_______________________________
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
         vals est un dictionnaire qui contient les valeurs des champs saisis par l'utilisateur lors de la création d'une offre depuis l'interface utilisateur.
         """
+        for vals in vals_list:
+            # On veut set le state de l'offre sur 'offer_received' quand une offre est créée ET ne pas pouvoir créer d'offre inférieur aux existantes
+            # On récupère la propriété liée à l'offre que l'on veut créer
+            property = self.env['estate.property'].browse(vals['property_id'])
 
-        # On veut set le state de l'offre sur 'offer_received' quand une offre est créée ET ne pas pouvoir créer d'offre inférieur aux existantes
-        print(vals)
-        # On récupère la propriété liée à l'offre que l'on veut créer
-        property = self.env['estate.property'].browse(vals['property_id'])
-        print(property.name)
-        # On récupère les offres liées à l'annonce
-        existing_offers = property.offers_ids
-        if existing_offers:
-            highest_price = max(existing_offers.mapped('price'))
-            if vals['price'] <= highest_price:
-                raise ValidationError("Can't create offer with a lower price than existing offers !")
-            
-        # On crée l'offre
-        offer = super().create(vals)
-        offer.property_id.state = "offer_received"
-        return offer
+            # Si l'annonce est vendue, on bloque la création de l'offre
+            if property.state == 'sold':
+                raise ValidationError("Can't create offre for an already sold property !")
+
+            # On récupère les offres liées à l'annonce
+            existing_offers = property.offers_ids
+            if existing_offers:
+                highest_price = max(existing_offers.mapped('price'))
+                if vals['price'] <= highest_price:
+                    raise ValidationError("Can't create offer with a lower price than existing offers !")
+                
+        # On la/les offre(s)
+        offers = super().create(vals_list)
+        offers.property_id.state = "offer_received"
+
+        return offers

@@ -201,11 +201,15 @@ class EstateProperty(models.Model):
         """
         Quand cette action est trigger via le bouton, on veut passer le state de l'annonce sur sold.
         On ne veut pas pouvoir trigger cette action si le state de l'annonce est déjà cancelled.
+        De plus, on ne peut pas SOLD une annonce sans offre acceptée.
         """
 
         for record in self:
             if not record.state == "cancelled":
-                record.state = 'sold'
+                if record.offers_ids.filtered(lambda offer: offer.status == 'accepted'):
+                    record.state = 'sold'
+                else:
+                    raise UserError("You can't sold a property with no accepted offer !")
             else:
                 raise UserError("Cancelled property can't be sold !")
 
